@@ -3,7 +3,7 @@ import {GenericFormFieldData, GridSizeProps} from "../models.ts";
 import {componentMapping} from "../utils/componentMapping.ts";
 import {useVModel, VModelEmitter, VModelProps} from "../utils/useVModel.ts";
 import {computed} from "vue";
-import {deepJoinObjects, joinObjects} from "../utils/jsUtils.ts";
+import {joinObjects} from "../utils/jsUtils.ts";
 import {getGridClass} from "../utils/formPropsUtils.ts";
 
 const props = defineProps<GenericFormFieldData & VModelProps<T> & {

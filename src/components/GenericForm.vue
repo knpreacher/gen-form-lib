@@ -16,8 +16,6 @@ const {model} = useVModel(props, emit, props.formData.useAsVModel ? undefined : 
 const fieldGroups = computed(
     () => props.formData.fieldGroups.map(g => getGroupProps(g, props.formData.groupsDefaults))
 )
-
-console.log(fieldGroups.value)
 </script>
 
 <template>

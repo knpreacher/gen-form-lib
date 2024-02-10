@@ -22,7 +22,6 @@ export function joinObjects<Type = Object>(...objs: Type[]): Type {
 
 export function deepJoinObjects<Type = Object>(...objs: Type[]): Type {
   let result = {} as Type
-  console.log("deepJoinObjects", objs)
   objs.forEach(obj => {
     if (!obj || typeof obj !== 'object') return
     // TODO: skip arrays
