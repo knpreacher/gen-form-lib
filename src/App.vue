@@ -47,25 +47,27 @@ const formData: GenericFormData = {
         {
           dataKey: 'api_t',
           dataType: 'api_object',
-          fetchOptions: {
-            fetchItemsGetter: res => res.results,
-            fetchCountGetter: res => res.count,
-            fetchFuncGetter: (offset, limit) => {
-              return new Promise(resolve => {
-                fetch(
-                    `http://127.0.0.1:8008/ru/api/v1/c_data/material?offset=${offset}&limit=${limit}`,
-                    {
-                      method: 'get',
-                      headers: {
-                        'ContentType': 'application/json'
+          listViewProps: {
+            fetchOptions: {
+              fetchItemsGetter: res => res.results,
+              fetchCountGetter: res => res.count,
+              fetchFuncGetter: (offset, limit) => {
+                return new Promise(resolve => {
+                  fetch(
+                      `http://127.0.0.1:8008/ru/api/v1/c_data/material?offset=${offset}&limit=${limit}`,
+                      {
+                        method: 'get',
+                        headers: {
+                          'ContentType': 'application/json'
+                        }
                       }
-                    }
-                ).then(resp => {
-                  resp.json().then(resolve)
+                  ).then(resp => {
+                    resp.json().then(resolve)
+                  })
                 })
-              })
+              }
+              // fetchItemsGetter: res => {}
             }
-            // fetchItemsGetter: res => {}
           }
         }
       ]
@@ -90,7 +92,16 @@ const formData: GenericFormData = {
 </script>
 
 <template>
-  <generic-form :form-data="formData"/>
+  <div class="q-ma-lg">
+    <generic-form :form-data="formData">
+      <template #api_t__selected="{value}">
+        {{ value?.name || 'no name' }}
+      </template>
+      <template #test1__append>
+        <div>00000</div>
+      </template>
+    </generic-form>
+  </div>
 </template>
 
 <style scoped>

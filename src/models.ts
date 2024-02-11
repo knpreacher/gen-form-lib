@@ -8,8 +8,15 @@ export declare type NoVModel<T extends QFieldProps> = Omit<T, 'modelValue' | 'on
 
 export declare type DataType = 'string' | 'int' | 'float' | 'boolean' | 'text' | 'api_object'
 
+export declare type SlotDeclaration = {
+  name: string
+  props?: Record<string, any>
+}
 export declare type ComponentMapping<FieldDataType = DataType, ExtraProps = Record<string, any>> = {
-  [key in (FieldDataType extends string ? FieldDataType : string)]: any
+  [key in (FieldDataType extends string ? FieldDataType : string)]: {
+    component: any,
+    slots?: SlotDeclaration[],
+  }
 } & ExtraProps
 
 export declare type ScreenBreakpoint = "xs" | "sm" | "md" | "lg" | "xl"
@@ -93,11 +100,18 @@ export declare type ApiListViewProps<Item = any, Response = any> = {
   height?: number
 }
 
-export declare type ApiObjectGenericFormFieldData<Item = any, Response = any> = BaseGenericFormFieldData<Item, 'api_object', NoVModel<QFieldProps>> & ApiListViewProps<Item, Response>
+export declare type ApiObjectGenericFormFieldData<Item = any, Response = any> = BaseGenericFormFieldData<Item, 'api_object', NoVModel<QFieldProps>> & {
+  listViewProps: ApiListViewProps<Item, Response>,
+}
 
 export declare type ApiObjectGenericFormFieldProps<Item = any, Response = any> = ApiObjectGenericFormFieldData<Item, Response> & VModelProps<Item | undefined>
 
 export declare type GenericFormFieldData = StringGenericFormFieldData | IntGenericFormFieldData | ApiObjectGenericFormFieldData
+
+export declare type GenericFormFieldProps = Partial<Omit<GenericFormFieldData, 'dataType' | 'dataKey'>> & {
+  dataType: GenericFormFieldData['dataType'],
+  dataKey: GenericFormFieldData['dataKey'],
+}
 
 export declare type GenericFormGroupData = {
   hideHeader?: boolean,

@@ -4,17 +4,23 @@ import {StringGenericFormFieldProps} from "../../models.ts";
 import {VModelEmitter} from "../../utils/useVModel.ts";
 
 const props = defineProps<StringGenericFormFieldProps>()
-const emit = defineEmits<VModelEmitter<string|undefined>>()
+const emit = defineEmits<VModelEmitter<string | undefined>>()
 const {
   model,
   fieldProps,
+  // slotDefs,
 } = useGenericInput(
     props, emit
 )
 </script>
 
 <template>
-  <q-input v-model="model" v-bind="fieldProps"></q-input>
+  <q-input v-model="model" v-bind="fieldProps">
+    <template v-for="(_, slot) in ($slots as {})" #[slot]="scope">
+      <slot :name="slot" v-if="scope" v-bind="scope"></slot>
+      <slot :name="slot" v-else></slot>
+    </template>
+  </q-input>
 </template>
 
 <style scoped>

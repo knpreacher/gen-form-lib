@@ -2,12 +2,16 @@
 import {
   ApiListViewProps
 } from "../../models.ts";
-import {computed, ref} from "vue";
+import {onMounted, ref} from "vue";
 import {Ref} from "@vue/reactivity";
 
 const props = withDefaults(defineProps<ApiListViewProps<Item, Response>>(), {
   height: 300
 })
+
+const emit = defineEmits<{
+  'itemClick': [item: Item]
+}>()
 
 const scrollTargetRef = ref()
 const containerRef = ref<Element | undefined>()
@@ -21,14 +25,36 @@ const containerRef = ref<Element | undefined>()
 //     props, emit
 // )
 
-const scrollContainerStyle = computed(() => ({
-  ...(props.height ? {
-    'height': `${props.height}px`,
-    // 'width': `${props.height}px`,
-    'width': `${containerRef.value?.clientWidth ?? 100}px`,
-    // 'overflow': 'auto',
-  } : {})
-}))
+function setContainerSize(w: number, h: number) {
+  return {
+    'height': `${h}px`,
+    'width': `${w}px`,
+  }
+}
+
+const scrollContainerStyle = ref(setContainerSize(1, props.height))
+onMounted(() => {
+  scrollContainerStyle.value = setContainerSize(containerRef.value?.scrollWidth ?? 100, props.height)
+})
+
+function onBlockResize(size: { width: number, height: number }) {
+  scrollContainerStyle.value = setContainerSize(size.width, props.height)
+}
+
+
+// watch(() => containerRef.value?.scrollWidth, (w) => {
+//   console.log('w', w)
+//   scrollContainerStyle.value = setContainerSize(w ?? 100, props.height)
+// })
+
+// const scrollContainerStyle = computed(() => ({
+//   ...(props.height ? {
+//     'height': `${props.height}px`,
+//     // 'width': `${props.height}px`,
+//     'width': `${containerRef.value?.clientWidth ?? 100}px`,
+//     // 'overflow': 'auto',
+//   } : {})
+// }))
 
 const loadedData: Ref<Item[]> = ref([])
 const allCount = ref<number>(0)
@@ -47,10 +73,11 @@ async function requestData(offset = 0, limit = 20) {
 }
 
 function onMoreDataNeed(index: number, done: (stop?: boolean) => void): void {
-  console.log(index, done)
-  // done(false)
-  requestData().then(data => {
-    done(loadedData.value.length >= data.count)
+  console.log(index)
+
+  let loaded = loadedData.value.length
+  requestData(loaded).then(data => {
+    done((loaded + data.results.length) >= data.count)
   })
 }
 
@@ -58,18 +85,19 @@ function onMoreDataNeed(index: number, done: (stop?: boolean) => void): void {
 </script>
 
 <template>
-  <!--  <q-scroll-area :style="{height: `${height}px`}" style="width: 100%">-->
-  <!--  :style="{'max-height': `${height}px`}"
-                         style="width: 100%; overflow-y: auto"-->
-  <div ref="containerRef" class="full-width">
+  <div ref="containerRef" class="fit gen-form__api-list-view__container" style="overflow-x: hidden">
+    <q-resize-observer @resize="onBlockResize"/>
     <q-scroll-area ref="scrollTargetRef" :style="scrollContainerStyle">
-<!--      :scroll-target="scrollTargetRef"-->
       <q-infinite-scroll
+          class="fit"
           @load="onMoreDataNeed"
           :offset="250"
       >
         <slot>
-          <q-item v-for="(item, ind) in loadedData" :ref="`item__${ind}`">
+          <q-item
+              v-for="(item, ind) in loadedData" :ref="`item__${ind}`"
+              clickable @click="emit('itemClick', item)"
+          >
             <q-item-section>
               {{ item }}
             </q-item-section>
@@ -83,7 +111,6 @@ function onMoreDataNeed(index: number, done: (stop?: boolean) => void): void {
       </q-infinite-scroll>
     </q-scroll-area>
   </div>
-  <!--  </q-scroll-area>-->
 </template>
 
 <style scoped>

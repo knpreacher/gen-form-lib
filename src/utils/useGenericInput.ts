@@ -1,6 +1,7 @@
 import {useVModel, VModelEmitterOption, VModelProps} from "./useVModel.ts";
 import {computed} from "vue";
-import {BaseGenericFormFieldData} from "../models.ts";
+import {BaseGenericFormFieldData, SlotDeclaration} from "../models.ts";
+import {componentMapping} from "./componentMapping.ts";
 
 
 // dummy
@@ -20,8 +21,10 @@ export function useGenericInput<FieldClass extends BaseGenericFormFieldData, Val
   emit: VModelEmitterOption<ValueClass>
 ) {
   const {model} = useVModel<ValueClass>(props, emit);
-  const fieldProps = computed(()=>props.inputProps);
+  const fieldProps = computed(() => props.inputProps);
+  const slotDefs: SlotDeclaration[] = componentMapping[props.dataType]?.slots || []
+
   return {
-    model, fieldProps
+    model, fieldProps, slotDefs
   }
 }

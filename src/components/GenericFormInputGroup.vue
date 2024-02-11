@@ -18,7 +18,7 @@ const fields = computed(
 )
 // console.log(fields.value)
 
-const gutterClasses = computed<VueClassProp>(()=>{
+const gutterClasses = computed<VueClassProp>(() => {
   if (!props.gutter) return {}
   if (typeof props.gutter === 'string') return {
     [`q-col-gutter-${props.gutter}`]: true
@@ -44,6 +44,12 @@ const gutterClasses = computed<VueClassProp>(()=>{
           :default-grid-props="defaultGridProps"
           v-model="(model as Record<string,any>)[field.dataKey]"
       >
+        <template v-for="(_, slot) in ($slots as {})" #[slot]="scope">
+          <slot :name="slot" v-bind="scope"></slot>
+        </template>
+        <!--        <template v-for="(_, slot) in $slots" #[slot]>-->
+        <!--          <slot :name="slot"></slot>-->
+        <!--        </template>-->
       </generic-form-input>
     </div>
   </div>

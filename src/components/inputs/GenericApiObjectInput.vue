@@ -17,15 +17,18 @@ const {
 <template>
   <q-field v-model="model" v-bind="fieldProps">
     <template #control>
-
+      <slot name="selected" v-bind="{value: model}">
+        {{ model }}
+      </slot>
     </template>
-    <q-popup-proxy>
-      <q-card style="width: 100%; min-width: 250px; max-width: 500px">
-        <api-list-view
-            :fetch-options="props.fetchOptions"
-        />
-      </q-card>
-    </q-popup-proxy>
+    <q-menu fit>
+      <!--      <q-card class="full-width" style="max-width: 500px; min-width: 200px">-->
+      <api-list-view
+          @item-click="model = $event"
+          v-bind="listViewProps"
+      />
+      <!--      </q-card>-->
+    </q-menu>
   </q-field>
 </template>
 
