@@ -2,7 +2,7 @@
 import type {GenericFormData} from "../models.ts";
 import GenericFormInputGroup from "./GenericFormInputGroup.vue";
 import {computed, useSlots} from "vue";
-import {getGroupProps} from "../utils/formPropsUtils.ts";
+import {getGroupProps} from "../utils/formUtils.ts";
 import {useVModel, VModelEmitter, VModelPartialProps} from "../utils/useVModel.ts";
 
 const props = defineProps<{

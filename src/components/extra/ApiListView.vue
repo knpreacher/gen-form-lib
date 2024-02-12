@@ -4,6 +4,7 @@ import {
 } from "../../models.ts";
 import {onMounted, ref} from "vue";
 import {Ref} from "@vue/reactivity";
+import Pass from "../helpers/Pass.vue";
 
 const props = withDefaults(defineProps<ApiListViewProps<Item, Response>>(), {
   height: 300
@@ -15,6 +16,18 @@ const emit = defineEmits<{
 
 const scrollTargetRef = ref()
 const containerRef = ref<Element | undefined>()
+
+function itemToString(item: Item): string {
+  return props.itemToString?.(item) ?? (typeof item === 'object' ? JSON.stringify(item) : String(item));
+}
+
+function itemEquals(v1: Item, v2: Item): boolean {
+  return props.itemEqual?.(v1, v2) ?? v1 === v2
+}
+
+function isItemSelected(item: Item): boolean {
+  return (props.selectedItems?.filter(t => itemEquals(t, item)).length ?? 0) > 0
+}
 
 // const emit = defineEmits<VModelEmitter<Item|undefined>>()
 
@@ -93,16 +106,21 @@ function onMoreDataNeed(index: number, done: (stop?: boolean) => void): void {
           @load="onMoreDataNeed"
           :offset="250"
       >
-        <slot>
-          <q-item
-              v-for="(item, ind) in loadedData" :ref="`item__${ind}`"
-              clickable @click="emit('itemClick', item)"
-          >
-            <q-item-section>
-              {{ item }}
-            </q-item-section>
-          </q-item>
-        </slot>
+        <template v-for="(item, ind) in loadedData">
+          <pass :data="{item, selected: isItemSelected(item)}" #default="{selected}">
+            <slot name="list_item">
+              <q-item
+                  :active="selected"
+                  :ref="`item__${ind}`"
+                  clickable @click="emit('itemClick', item)"
+              >
+                <q-item-section>
+                  {{ itemToString(item) }}
+                </q-item-section>
+              </q-item>
+            </slot>
+          </pass>
+        </template>
         <template #loading>
           <div class="row justify-center q-my-md">
             <q-spinner-dots color="primary" size="40px"/>

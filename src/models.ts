@@ -1,12 +1,22 @@
-import type {QFieldProps, QInputProps, VueClassProp} from "quasar";
+import type {QDateProps, QFieldProps, QInputProps, QTimeProps, VueClassProp} from "quasar";
 import {NamedColor} from "quasar/dist/types/api/color";
 import {VModelProps} from "./utils/useVModel.ts";
 
 declare type Enumerate<N extends number, Acc extends number[] = []> = Acc['length'] extends N ? Acc['length'] : Enumerate<N, [...Acc, Acc['length']]>
 declare type IntRange<N1 extends number, N2 extends number> = Exclude<Enumerate<N2>, Enumerate<N1>>
-export declare type NoVModel<T extends QFieldProps> = Omit<T, 'modelValue' | 'onUpdate:modelValue'>
+// export declare type NoVModel<T extends QFieldProps> = Omit<T, 'modelValue' | 'onUpdate:modelValue'>
+export declare type NoVModel<T extends QFieldProps> = Omit<T, 'modelValue'>
 
-export declare type DataType = 'string' | 'int' | 'float' | 'boolean' | 'text' | 'api_object'
+export declare type DataType =
+  'string'
+  | 'int'
+  | 'float'
+  | 'boolean'
+  | 'text'
+  | 'api_object'
+  | 'date'
+  | 'time'
+  | 'datetime'
 
 export declare type SlotDeclaration = {
   name: string
@@ -89,6 +99,35 @@ export declare type StringGenericFormFieldProps = StringGenericFormFieldData & V
 export declare type IntGenericFormFieldData = BaseGenericFormFieldData<number, 'int', NoVModel<QInputProps & { placeholder?: string }>>
 export declare type IntGenericFormFieldProps = IntGenericFormFieldData & VModelProps<number | undefined>
 
+export declare type DateGenericFormFieldData = BaseGenericFormFieldData<string, 'date', NoVModel<QInputProps>> & {
+  calendarProps?: Omit<QDateProps, 'modelValue'>
+  calendarIcon?: string,
+  dateInputFormat?: string,
+  autoMask?: boolean,
+}
+
+export declare type DatetimeGenericFormFieldData = BaseGenericFormFieldData<string, 'datetime', NoVModel<QInputProps>> & {
+  calendarProps?: Omit<QDateProps, 'modelValue'>
+  calendarIcon?: string,
+  clockProps?: Omit<QTimeProps, 'modelValue'>
+  clockIcon?: string,
+  datetimeInputFormat?: string,
+  splitDateTime?: (dt: string) => { date: string, time: string }
+  joinDateTime?: (date?: string, time?: string) => string
+  autoMask?: boolean,
+}
+
+export declare type TimeGenericFormFieldData = BaseGenericFormFieldData<string, 'time', NoVModel<QInputProps>> & {
+  clockProps?: Omit<QTimeProps, 'modelValue'>
+  clockIcon?: string,
+  timeInputFormat?: string,
+  autoMask?: boolean,
+}
+
+export declare type DateGenericFormFieldProps = DateGenericFormFieldData & VModelProps<string | undefined>
+export declare type DatetimeGenericFormFieldProps = DatetimeGenericFormFieldData & VModelProps<string | undefined>
+export declare type TimeGenericFormFieldProps = TimeGenericFormFieldData & VModelProps<string | undefined>
+
 export declare type ApiObjectFetchOptions<Item = any, Response = any> = {
   fetchFuncGetter: ApiFetchFuncGetter<Response>,
   fetchItemsGetter: ApiFetchItemsGetter<Item, Response>,
@@ -96,17 +135,30 @@ export declare type ApiObjectFetchOptions<Item = any, Response = any> = {
 }
 
 export declare type ApiListViewProps<Item = any, Response = any> = {
+  selectedItems?: Item[],
   fetchOptions: ApiObjectFetchOptions<Item, Response>,
+  itemToString?: (value: Item) => string,
+  itemEqual?: (v1: Item, v2: Item) => boolean,
   height?: number
 }
 
-export declare type ApiObjectGenericFormFieldData<Item = any, Response = any> = BaseGenericFormFieldData<Item, 'api_object', NoVModel<QFieldProps>> & {
+export declare type ApiObjectGenericFormFieldData<Item = any, Response = any> =
+  BaseGenericFormFieldData<Item, 'api_object', NoVModel<QFieldProps>>
+  & {
   listViewProps: ApiListViewProps<Item, Response>,
 }
 
-export declare type ApiObjectGenericFormFieldProps<Item = any, Response = any> = ApiObjectGenericFormFieldData<Item, Response> & VModelProps<Item | undefined>
+export declare type ApiObjectGenericFormFieldProps<Item = any, Response = any> =
+  ApiObjectGenericFormFieldData<Item, Response>
+  & VModelProps<Item | undefined>
 
-export declare type GenericFormFieldData = StringGenericFormFieldData | IntGenericFormFieldData | ApiObjectGenericFormFieldData
+export declare type GenericFormFieldData =
+  StringGenericFormFieldData
+  | IntGenericFormFieldData
+  | ApiObjectGenericFormFieldData
+  | DateGenericFormFieldData
+  | TimeGenericFormFieldData
+  | DatetimeGenericFormFieldData
 
 export declare type GenericFormFieldProps = Partial<Omit<GenericFormFieldData, 'dataType' | 'dataKey'>> & {
   dataType: GenericFormFieldData['dataType'],

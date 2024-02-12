@@ -23,8 +23,8 @@ export function useGenericInput<FieldClass extends BaseGenericFormFieldData, Val
   const {model} = useVModel<ValueClass>(props, emit);
   const fieldProps = computed(() => props.inputProps);
   const slotDefs: SlotDeclaration[] = componentMapping[props.dataType]?.slots || []
-
+  const getRealSlot = (slotName: string) => slotName.substring(slotName.lastIndexOf('__') + 2)
   return {
-    model, fieldProps, slotDefs
+    model, fieldProps, slotDefs, getRealSlot
   }
 }

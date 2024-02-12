@@ -45,5 +45,25 @@ export function getGridClass(gridProps?: GridSizeProps): VueClassProp {
     }
   })
   return resultClass;
+}
 
+export function splitDateTimeDefault(dt: string) {
+  let spl = dt.split(' ')
+  if (spl.length === 0) {
+    return {
+      date: '', time: ''
+    }
+  }
+  if (spl.length === 1) {
+    return {
+      date: spl[0], time: ''
+    }
+  }
+  return {
+    date: spl[0], time: spl[1]
+  }
+}
+
+export function joinDateTimeDefault(date?: string, time?: string) {
+  return [date, time].join(' ')
 }

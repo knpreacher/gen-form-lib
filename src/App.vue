@@ -45,6 +45,30 @@ const formData: GenericFormData = {
       label: "lol",
       fields: [
         {
+          dataKey: 'test_date',
+          dataType: 'date',
+          autoMask: true,
+          inputProps: {
+            label: 'Date'
+          }
+        },
+        {
+          dataKey: 'test_time',
+          dataType: 'time',
+          autoMask: true,
+          inputProps: {
+            label: 'Time'
+          }
+        },
+        {
+          dataKey: 'test_datetime',
+          dataType: 'datetime',
+          autoMask: true,
+          inputProps: {
+            label: 'Datetime'
+          }
+        },
+        {
           dataKey: 'api_t',
           dataType: 'api_object',
           listViewProps: {

@@ -1,10 +1,10 @@
 <script setup lang="ts" generic="T = any">
-import {GenericFormFieldProps, GridSizeProps, SlotDeclaration} from "../models.ts";
+import {GenericFormFieldProps, GridSizeProps} from "../models.ts";
 import {componentMapping} from "../utils/componentMapping.ts";
 import {useVModel, VModelEmitter, VModelProps} from "../utils/useVModel.ts";
-import {computed} from "vue";
+import {computed, useSlots} from "vue";
 import {joinObjects} from "../utils/jsUtils.ts";
-import {getGridClass} from "../utils/formPropsUtils.ts";
+import {getGridClass} from "../utils/formUtils.ts";
 
 const props = defineProps<GenericFormFieldProps & VModelProps<T> & {
   defaultGridProps?: GridSizeProps
@@ -13,12 +13,12 @@ const emit = defineEmits<VModelEmitter<T>>()
 
 const {model} = useVModel(props, emit)
 const componentData = componentMapping[props.dataType]
-const slotDefs: SlotDeclaration[] = componentData?.slots || []
 const fieldGridProps = computed(() => joinObjects(props.defaultGridProps, props.gridProps))
 
 const gridClasses = computed(() => getGridClass(fieldGridProps.value))
-
-const getRealSlot = (slotName: string) => slotName.substring(slotName.lastIndexOf('__') + 2)
+const slotNames = Object.keys(useSlots())
+const fieldSlotNames = computed(()=>slotNames.filter(name=>name.startsWith(props.dataKey)))
+// const getRealSlot = (slotName: string) => slotName.substring(slotName.lastIndexOf('__') + 2)
 </script>
 
 <template>
@@ -31,7 +31,7 @@ const getRealSlot = (slotName: string) => slotName.substring(slotName.lastIndexO
             v-model="model"
             v-bind="props"
         >
-          <template v-for="(_, slot) in ($slots as {})" #[getRealSlot(slot)]="scope">
+          <template v-for="slot in fieldSlotNames" #[slot]="scope">
             <slot :name="slot" v-bind="scope"></slot>
           </template>
         </component>

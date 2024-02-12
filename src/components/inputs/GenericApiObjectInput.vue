@@ -25,6 +25,7 @@ const {
       <!--      <q-card class="full-width" style="max-width: 500px; min-width: 200px">-->
       <api-list-view
           @item-click="model = $event"
+          :selected-items="[model as Item]"
           v-bind="listViewProps"
       />
       <!--      </q-card>-->

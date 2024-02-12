@@ -8,6 +8,7 @@ const emit = defineEmits<VModelEmitter<string | undefined>>()
 const {
   model,
   fieldProps,
+  getRealSlot
   // slotDefs,
 } = useGenericInput(
     props, emit
@@ -16,7 +17,7 @@ const {
 
 <template>
   <q-input v-model="model" v-bind="fieldProps">
-    <template v-for="(_, slot) in ($slots as {})" #[slot]="scope">
+    <template v-for="(_, slot) in ($slots as {})" #[getRealSlot(slot)]="scope">
       <slot :name="slot" v-if="scope" v-bind="scope"></slot>
       <slot :name="slot" v-else></slot>
     </template>

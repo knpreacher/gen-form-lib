@@ -2,7 +2,7 @@
 import {GenericFormFieldDataDefaults, GenericFormGroupData} from "../models.ts";
 import GenericFormInput from "./GenericFormInput.vue";
 import {computed} from "vue";
-import {getFieldProps} from "../utils/formPropsUtils.ts";
+import {getFieldProps} from "../utils/formUtils.ts";
 import {useVModel, VModelEmitter, VModelProps} from "../utils/useVModel.ts";
 import {VueClassProp} from "quasar";
 
