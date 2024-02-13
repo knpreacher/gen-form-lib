@@ -17,6 +17,7 @@ const formData: GenericFormData = {
     // icon: 'home',
   },
   fieldDefaults: {
+    // defaultValue: undefined,
     inputProps: {
       outlined: true,
       dense: true,
@@ -66,6 +67,21 @@ const formData: GenericFormData = {
           autoMask: true,
           inputProps: {
             label: 'Datetime'
+          }
+        },
+        {
+          dataKey: 'test_bool',
+          dataType: 'bool',
+          inputProps: {
+            label: 'Bool'
+          }
+        },
+        {
+          dataKey: 'test_bool_toggle',
+          dataType: 'bool_toggle',
+          defaultValue: true,
+          inputProps: {
+            label: 'Bool Toggle'
           }
         },
         {

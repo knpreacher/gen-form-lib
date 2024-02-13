@@ -16,6 +16,14 @@ const {model} = useVModel(props, emit)
 const fields = computed(
     () => props.fields.map(f => getFieldProps(f, props.fieldDefaults))
 )
+
+// const fields = computed(
+//     () => props.fields.map(f => {
+//       let fp = getFieldProps(f, props.fieldDefaults)
+//       console.log(f.dataKey, JSON.stringify(f), JSON.stringify(props.fieldDefaults), JSON.stringify(fp))
+//       return fp
+//     })
+// )
 // console.log(fields.value)
 
 const gutterClasses = computed<VueClassProp>(() => {

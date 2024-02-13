@@ -20,7 +20,10 @@ export function useGenericInput<FieldClass extends BaseGenericFormFieldData, Val
   props: (FieldClass & VModelProps<ValueClass>),
   emit: VModelEmitterOption<ValueClass>
 ) {
+  // console.log('initial model for', props.dataKey, 'is', props.defaultValue)
+  // console.log('initial model for', props.dataKey, 'is', props.defaultValue, typeof props.defaultValue)
   const {model} = useVModel<ValueClass>(props, emit);
+  // const {model} = useVModel<ValueClass>(props, emit);
   const fieldProps = computed(() => props.inputProps);
   const slotDefs: SlotDeclaration[] = componentMapping[props.dataType]?.slots || []
   const getRealSlot = (slotName: string) => slotName.substring(slotName.lastIndexOf('__') + 2)

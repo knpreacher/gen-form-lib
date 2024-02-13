@@ -5,6 +5,8 @@ import GenericApiObjectInput from "../components/inputs/GenericApiObjectInput.vu
 import GenericDateInput from "../components/inputs/GenericDateInput.vue";
 import GenericTimeInput from "../components/inputs/GenericTimeInput.vue";
 import GenericDatetimeInput from "../components/inputs/GenericDatetimeInput.vue";
+import GenericBoolInput from "../components/inputs/GenericBoolInput.vue";
+import GenericBoolToggleInput from "../components/inputs/GenericBoolToggleInput.vue";
 
 
 // export const componentMapping = Object.freeze<Partial<ComponentMapping>>({
@@ -46,6 +48,12 @@ export const componentMapping = Object.freeze<Partial<ComponentMapping>>({
   },
   datetime: {
     component: GenericDatetimeInput
+  },
+  bool: {
+    component: GenericBoolInput
+  },
+  bool_toggle: {
+    component: GenericBoolToggleInput
   },
   api_object: {
     component: GenericApiObjectInput

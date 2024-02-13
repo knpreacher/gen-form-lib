@@ -4,20 +4,21 @@ import GenericFormInputGroup from "./GenericFormInputGroup.vue";
 import {computed, useSlots} from "vue";
 import {getGroupProps} from "../utils/formUtils.ts";
 import {useVModel, VModelEmitter, VModelPartialProps} from "../utils/useVModel.ts";
+import {useGenericDataForm} from "../utils/createForm.ts";
 
 const props = defineProps<{
-  formData: GenericFormData
+  formData: GenericFormData,
 } & VModelPartialProps<T>>()
 
 const emit = defineEmits<VModelEmitter<T>>()
 
-const {model} = useVModel(props, emit, props.formData.useAsVModel ? undefined : {} as T)
 
 const fieldGroups = computed(
     () => props.formData.fieldGroups.map(g => getGroupProps(g, props.formData.groupsDefaults))
 )
-
-const allFields = computed(() => props.formData.fieldGroups.map(g => g.fields).flat(1))
+const {initialData} = useGenericDataForm(props.formData)
+const {model} = useVModel(props, emit, props.formData.useAsVModel ? undefined : initialData as T)
+// const allFields = computed(() => props.formData.fieldGroups.map(g => g.fields).flat(1))
 // defineSlots<{
 //
 // }>()

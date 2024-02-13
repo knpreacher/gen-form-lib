@@ -26,7 +26,7 @@ export function getFieldProps(
   _defaults?: GenericFormFieldDataDefaults,
   _initials?: GenericFormFieldDataDefaults
 ) {
-  if (!_defaults) return fieldData
+  if (!_defaults && !_initials) return fieldData
   return deepJoinObjects(
     _initials as GenericFormFieldData,
     _defaults as GenericFormFieldData,

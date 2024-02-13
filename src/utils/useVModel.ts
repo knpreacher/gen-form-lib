@@ -20,11 +20,12 @@ function getModelValue(value: any, _default: any = undefined) {
   if (typeof value === 'string') {
     return value
   }
-  return value || _default
+  return value ?? _default
 }
 
 function getInitialValue(value: any, _default: any = undefined) {
   let mv = getModelValue(value, _default)
+  if (typeof mv === 'undefined') return mv
   if (typeof mv === 'object') return copyObject(mv)
   return mv
 }

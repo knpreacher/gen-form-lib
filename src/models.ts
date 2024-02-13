@@ -1,17 +1,28 @@
-import type {QDateProps, QFieldProps, QInputProps, QTimeProps, VueClassProp} from "quasar";
+import type {
+  QCheckboxProps,
+  QDateProps,
+  QFieldProps,
+  QInputProps,
+  QTimeProps,
+  QToggleProps,
+  VueClassProp
+} from "quasar";
 import {NamedColor} from "quasar/dist/types/api/color";
 import {VModelProps} from "./utils/useVModel.ts";
 
 declare type Enumerate<N extends number, Acc extends number[] = []> = Acc['length'] extends N ? Acc['length'] : Enumerate<N, [...Acc, Acc['length']]>
 declare type IntRange<N1 extends number, N2 extends number> = Exclude<Enumerate<N2>, Enumerate<N1>>
 // export declare type NoVModel<T extends QFieldProps> = Omit<T, 'modelValue' | 'onUpdate:modelValue'>
-export declare type NoVModel<T extends QFieldProps> = Omit<T, 'modelValue'>
+export declare type NoVModel<T extends {
+  modelValue?: any
+}> = Omit<T, 'modelValue'>
 
 export declare type DataType =
   'string'
   | 'int'
   | 'float'
-  | 'boolean'
+  | 'bool'
+  | 'bool_toggle'
   | 'text'
   | 'api_object'
   | 'date'
@@ -78,7 +89,9 @@ export declare type InputToggleProps<
 //             Typed fields              //
 //--------------------------------------//
 
-export declare type DefaultFieldProps = QFieldProps & { placeholder?: string }
+export declare type DefaultFieldProps = QFieldProps & {
+  placeholder?: string
+}
 
 export declare type BaseGenericFormFieldData<ValueType = any, FieldDataType extends DataType = DataType, FieldClassProps = DefaultFieldProps> =
   {
@@ -93,10 +106,18 @@ export declare type BaseGenericFormFieldData<ValueType = any, FieldDataType exte
   }
   & DomExtraProps
 
+export declare type BoolGenericFormFieldData = BaseGenericFormFieldData<boolean, 'bool', NoVModel<QCheckboxProps>>
+export declare type BoolGenericFormFieldProps = BoolGenericFormFieldData & VModelProps<boolean | undefined>
+
+export declare type BoolToggleGenericFormFieldData = BaseGenericFormFieldData<boolean, 'bool_toggle', NoVModel<QToggleProps>>
+export declare type BoolToggleGenericFormFieldProps = BoolToggleGenericFormFieldData & VModelProps<boolean | undefined>
+
 export declare type StringGenericFormFieldData = BaseGenericFormFieldData<string, 'string', NoVModel<QInputProps>>
 export declare type StringGenericFormFieldProps = StringGenericFormFieldData & VModelProps<string | undefined>
 
-export declare type IntGenericFormFieldData = BaseGenericFormFieldData<number, 'int', NoVModel<QInputProps & { placeholder?: string }>>
+export declare type IntGenericFormFieldData = BaseGenericFormFieldData<number, 'int', NoVModel<QInputProps & {
+  placeholder?: string
+}>>
 export declare type IntGenericFormFieldProps = IntGenericFormFieldData & VModelProps<number | undefined>
 
 export declare type DateGenericFormFieldData = BaseGenericFormFieldData<string, 'date', NoVModel<QInputProps>> & {
@@ -106,13 +127,18 @@ export declare type DateGenericFormFieldData = BaseGenericFormFieldData<string, 
   autoMask?: boolean,
 }
 
-export declare type DatetimeGenericFormFieldData = BaseGenericFormFieldData<string, 'datetime', NoVModel<QInputProps>> & {
+export declare type DatetimeGenericFormFieldData =
+  BaseGenericFormFieldData<string, 'datetime', NoVModel<QInputProps>>
+  & {
   calendarProps?: Omit<QDateProps, 'modelValue'>
   calendarIcon?: string,
   clockProps?: Omit<QTimeProps, 'modelValue'>
   clockIcon?: string,
   datetimeInputFormat?: string,
-  splitDateTime?: (dt: string) => { date: string, time: string }
+  splitDateTime?: (dt: string) => {
+    date: string,
+    time: string
+  }
   joinDateTime?: (date?: string, time?: string) => string
   autoMask?: boolean,
 }
@@ -159,6 +185,8 @@ export declare type GenericFormFieldData =
   | DateGenericFormFieldData
   | TimeGenericFormFieldData
   | DatetimeGenericFormFieldData
+  | BoolGenericFormFieldData
+  | BoolToggleGenericFormFieldData
 
 export declare type GenericFormFieldProps = Partial<Omit<GenericFormFieldData, 'dataType' | 'dataKey'>> & {
   dataType: GenericFormFieldData['dataType'],
@@ -183,7 +211,7 @@ export declare type GenericFormGroupDataDefaults = Partial<Omit<GenericFormGroup
 export declare type GenericFormData = {
   // name: string,
   useAsVModel?: boolean,
-  fieldDefaults?: GenericFormFieldDataDefaults,
+  fieldDefaults?: Omit<GenericFormFieldDataDefaults, 'defaultValue'>,
   groupsDefaults?: GenericFormGroupDataDefaults,
   fieldGroups: GenericFormGroupData[],
 }

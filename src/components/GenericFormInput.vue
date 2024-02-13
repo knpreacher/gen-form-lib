@@ -12,18 +12,20 @@ const props = defineProps<GenericFormFieldProps & VModelProps<T> & {
 const emit = defineEmits<VModelEmitter<T>>()
 
 const {model} = useVModel(props, emit)
+console.log("gfi props", props)
 const componentData = componentMapping[props.dataType]
 const fieldGridProps = computed(() => joinObjects(props.defaultGridProps, props.gridProps))
 
 const gridClasses = computed(() => getGridClass(fieldGridProps.value))
 const slotNames = Object.keys(useSlots())
-const fieldSlotNames = computed(()=>slotNames.filter(name=>name.startsWith(props.dataKey)))
+const fieldSlotNames = computed(() => slotNames.filter(name => name.startsWith(props.dataKey)))
 // const getRealSlot = (slotName: string) => slotName.substring(slotName.lastIndexOf('__') + 2)
 </script>
 
 <template>
   <slot>
     <div class="gen-form-field__container" :class="gridClasses">
+      {{ props }}
       <slot name="field">
         <component
             v-if="componentData && componentData.component"

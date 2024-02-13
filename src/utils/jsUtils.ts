@@ -28,7 +28,7 @@ export function deepJoinObjects<Type = Object>(...objs: Type[]): Type {
     if (Array.isArray(obj)) return
     Object.entries(obj as Record<string, any>).forEach((entry: [string, any]) => {
       const [key, value] = entry;
-      if (typeof value === 'object') {
+      if (typeof value === 'object' && typeof value !== 'undefined') {
         result = ((result as Record<string, any>)[key] === undefined) ? ({
           ...result,
           [key]: value
@@ -41,10 +41,11 @@ export function deepJoinObjects<Type = Object>(...objs: Type[]): Type {
       } else {
         result = {
           ...result,
-          [key]: value
+          [key]: value ?? undefined
         }
       }
     })
   })
+  console.log('call deepJoinObjects', objs, result)
   return result
 }
